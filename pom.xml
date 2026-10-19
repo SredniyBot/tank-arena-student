@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>student</groupId>
+    <artifactId>my-bot</artifactId>
+    <version>2.7.0</version>
+    <name>My Tank Arena bot</name>
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <repositories>
+        <repository>
+            <id>bundled-arena-sdk</id>
+            <url>file://${project.basedir}/.mvn/repository</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>edu.arena</groupId>
+            <artifactId>arena-client</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>6.0.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.4.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                    <forkedProcessTimeoutInSeconds>30</forkedProcessTimeoutInSeconds>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.44.4</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <lineEndings>UNIX</lineEndings>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <googleJavaFormat>
+                            <version>1.24.0</version>
+                            <style>AOSP</style>
+                            <reflowLongStrings>false</reflowLongStrings>
+                            <formatJavadoc>true</formatJavadoc>
+                        </googleJavaFormat>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-java-format</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <checkstyleRules>
+                        <module name="Checker">
+                            <module name="TreeWalker">
+                                <module name="AvoidStarImport" />
+                                <module name="NeedBraces" />
+                                <module name="MultipleVariableDeclarations" />
+                            </module>
+                        </module>
+                    </checkstyleRules>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <includeResources>false</includeResources>
+                    <includeTestResources>false</includeTestResources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-java-structure</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
