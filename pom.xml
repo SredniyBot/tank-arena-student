@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>student</groupId>
     <artifactId>my-bot</artifactId>
-    <version>2.8.1</version>
+    <version>2.9.0</version>
     <name>My Tank Arena bot</name>
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>edu.arena</groupId>
             <artifactId>arena-client</artifactId>
-            <version>2.8.1</version>
+            <version>2.9.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
