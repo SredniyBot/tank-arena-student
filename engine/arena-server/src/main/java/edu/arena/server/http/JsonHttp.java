@@ -2,6 +2,7 @@ package edu.arena.server.http;
 
 import com.sun.net.httpserver.HttpExchange;
 import edu.arena.protocol.JsonCodec;
+import edu.arena.protocol.Messages;
 import edu.arena.server.match.ApplicationFailure;
 import java.io.IOException;
 import java.util.Locale;
@@ -68,6 +69,7 @@ final class JsonHttp {
         var h = x.getResponseHeaders();
         h.set("Content-Type", contentType);
         h.set("Cache-Control", "no-store");
+        h.set(Messages.VERSION_HEADER, Messages.VERSION);
         h.set("X-Content-Type-Options", "nosniff");
         h.set("X-Frame-Options", "DENY");
         h.set("Referrer-Policy", "no-referrer");

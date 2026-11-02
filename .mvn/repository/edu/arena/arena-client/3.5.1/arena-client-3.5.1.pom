@@ -3,6 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.arena</groupId>
   <artifactId>arena-client</artifactId>
-  <version>3.5.0</version>
+  <version>3.5.1</version>
   <description>Self-contained Tank Arena SDK for Java 21.</description>
 </project>

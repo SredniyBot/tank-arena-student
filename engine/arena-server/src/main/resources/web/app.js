@@ -8,6 +8,7 @@ import { createArenaRenderer } from "./renderer.js";
 import { matchPollMillis, interpolationMillis, shouldDraw, replayMatchAt } from "./live-timing.js";
 import { createButtonInput } from "./manual-input.js";
 import { createTeacherRules } from "./teacher-rules.js";
+import { PROTOCOL_VERSION, PROTOCOL_HEADER, INDEPENDENT_COMBAT } from "./protocol.js";
 
 (() => {
   const $ = (id) => document.getElementById(id);
@@ -113,6 +114,7 @@ import { createTeacherRules } from "./teacher-rules.js";
       STORAGE_UNAVAILABLE:
         "Сервер не смог сохранить данные. Преподавателю нужно проверить каталог данных и свободное место.",
       IO_UNAVAILABLE: "Сервер временно недоступен. Повторите действие позже.",
+      INCOMPATIBLE_PROTOCOL: "Обновите страницу: сервер принимает только актуальный протокол.",
     };
     const code = payload?.code;
     if (typeof code === "string" && Object.hasOwn(messages, code))
@@ -191,7 +193,7 @@ import { createTeacherRules } from "./teacher-rules.js";
       const timeout = setTimeout(() => controller.abort(), 12000);
       const abort = () => controller.abort();
       for (const source of signals) source.addEventListener("abort", abort, { once: true });
-      const headers = { Accept: "application/json" };
+      const headers = { Accept: "application/json", [PROTOCOL_HEADER]: PROTOCOL_VERSION };
       if (credential) headers.Authorization = `Bearer ${credential}`;
       if (body !== undefined) headers["Content-Type"] = "application/json";
       let response,
@@ -609,29 +611,34 @@ import { createTeacherRules } from "./teacher-rules.js";
       try {
         if (!state.info) {
           state.info = await api("/info");
-          if (state.info.version !== "2.12") {
+          if (state.info.version !== PROTOCOL_VERSION) {
             state.info = null;
             throw new ApiError(
               400,
               "INCOMPATIBLE_SERVER",
-              "Версии клиента и сервера не совпадают. Нужен протокол Tank Arena 2.12.",
+              `Версии клиента и сервера не совпадают. Нужен протокол Tank Arena ${PROTOCOL_VERSION}. Обновите страницу.`,
             );
           }
           $("server-version").textContent = state.info.version
             ? ` / API ${state.info.version}`
             : "";
           if (state.info.reconEnabled && location.hash !== "#teacher") {
-            location.replace("/recon.html");
+            location.replace(INDEPENDENT_COMBAT ? "/combat.html" : "/recon.html");
             return;
           }
           if (state.info.reconEnabled) {
             document.querySelector(".conditions-panel").hidden = true;
             $("tournament-form").closest("section").hidden = true;
-            $("tournament-status").previousElementSibling.textContent = "Сеанс разведки";
+            $("tournament-status").previousElementSibling.textContent =
+              INDEPENDENT_COMBAT ? "Непрерывный бой" : "Сеанс разведки";
             $("tournament-status").textContent =
-              "Поле работает непрерывно. Для новых условий и обнуления командного счёта перезапустите сервер.";
+              INDEPENDENT_COMBAT
+                ? "Все участники играют на одном поле. После гибели танк возрождается, личный счёт сохраняется."
+                : "Поле работает непрерывно. Для новых условий и обнуления командного счёта перезапустите сервер.";
             notify(
-              "Режим разведки: поле и составы команд открываются по ссылке «Разведка» вверху. Здесь доступны пароль и допуск игроков.",
+              INDEPENDENT_COMBAT
+                ? "Поле боя открывается по ссылке вверху. Здесь доступны общий пароль, допуск и отключение игроков."
+                : "Режим разведки: поле и составы команд открываются по ссылке «Разведка» вверху. Здесь доступны пароль и допуск игроков.",
             );
           }
         }

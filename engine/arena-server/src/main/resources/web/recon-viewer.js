@@ -1,4 +1,5 @@
 import { createArenaRenderer } from "./renderer.js";
+import { PROTOCOL_VERSION, PROTOCOL_HEADER } from "./protocol.js";
 import { teamOf } from "./team-roster.js";
 import { createFrameModel, tankPalette } from "./frame-model.js";
 import {
@@ -124,6 +125,7 @@ async function request(path, options = {}) {
     cache: "no-store",
     ...options,
     headers: {
+      [PROTOCOL_HEADER]: PROTOCOL_VERSION,
       ...(credential ? { Authorization: `Bearer ${credential}` } : {}),
       ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...options.headers,

@@ -8,7 +8,7 @@
     <parent>
         <groupId>edu.arena</groupId>
         <artifactId>tank-arena</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
     </parent>
     <artifactId>arena-core</artifactId>
     <name>Tank Arena - deterministic simulation</name>

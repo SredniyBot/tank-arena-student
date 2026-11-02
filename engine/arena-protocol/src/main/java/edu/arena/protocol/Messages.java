@@ -13,6 +13,7 @@ import java.util.Map;
 /** Version-two wire values. Domain behavior belongs to core or application services. */
 public final class Messages {
     public static final String VERSION = "2.13";
+    public static final String VERSION_HEADER = "X-Arena-Protocol";
 
     private Messages() {}
 

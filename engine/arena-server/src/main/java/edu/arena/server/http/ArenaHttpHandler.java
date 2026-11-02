@@ -110,12 +110,27 @@ public final class ArenaHttpHandler implements HttpHandler {
             }
         }
         assets.put("/", assets.get("/index.html"));
+        // Browser and Java clients share one version source; no separate JS version literal.
+        String browserProtocol =
+                "export const PROTOCOL_VERSION = \""
+                        + Messages.VERSION
+                        + "\";\nexport const PROTOCOL_HEADER = \""
+                        + Messages.VERSION_HEADER
+                        + "\";\nexport const INDEPENDENT_COMBAT = "
+                        + config.live().combatEnabled()
+                        + ";\n";
+        assets.put(
+                "/protocol.js",
+                new Asset(
+                        browserProtocol.getBytes(StandardCharsets.UTF_8),
+                        "text/javascript; charset=utf-8"));
     }
 
     @Override
     public void handle(HttpExchange exchange) {
         try {
             guard.before(exchange);
+            guard.requireProtocol(exchange);
             route(exchange);
         } catch (ApplicationFailure e) {
             error(exchange, e.status(), e.code(), e.getMessage());

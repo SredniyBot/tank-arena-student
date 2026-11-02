@@ -1,6 +1,7 @@
 import { createArenaRenderer } from "./renderer.js";
 import { createFrameModel } from "./frame-model.js";
 import { reconMatch } from "./recon-view-model.js";
+import { PROTOCOL_VERSION, PROTOCOL_HEADER } from "./protocol.js";
 
 const $ = (id) => document.getElementById(id);
 const renderer = createArenaRenderer($("field"));
@@ -44,7 +45,10 @@ async function request(path) {
   const response = await fetch(`/api/v2${path}`, {
     signal: controller.signal,
     cache: "no-store",
-    headers: { Authorization: `Bearer ${key}` },
+    headers: {
+      Authorization: `Bearer ${key}`,
+      [PROTOCOL_HEADER]: PROTOCOL_VERSION,
+    },
   });
   const body = await response.json();
   if (!response.ok) throw new Error(body.message || `HTTP ${response.status}`);

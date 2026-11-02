@@ -3,6 +3,7 @@ package edu.arena.client;
 import edu.arena.core.model.Control;
 import edu.arena.core.model.Vec2;
 import edu.arena.protocol.JsonCodec;
+import edu.arena.protocol.Messages;
 import edu.arena.protocol.Messages.Command;
 import edu.arena.protocol.Messages.CommandReceipt;
 import edu.arena.protocol.Messages.Enroll;
@@ -46,6 +47,7 @@ public final class ArenaClient implements ArenaGateway, ReconGateway {
                     "COMMAND_CONFLICT",
                     "ELIMINATED",
                     "ENCODING_REJECTED",
+                    "INCOMPATIBLE_PROTOCOL",
                     "INTERNAL_ERROR",
                     "INVALID_AIM",
                     "INVALID_COMMAND",
@@ -270,7 +272,8 @@ public final class ArenaClient implements ArenaGateway, ReconGateway {
         var builder =
                 HttpRequest.newBuilder(base.resolve(path))
                         .timeout(timeout)
-                        .header("Accept", "application/json");
+                        .header("Accept", "application/json")
+                        .header(Messages.VERSION_HEADER, Messages.VERSION);
         if (token != null) {
             builder.header("Authorization", "Bearer " + token);
         }
@@ -354,6 +357,8 @@ public final class ArenaClient implements ArenaGateway, ReconGateway {
     private static String rejectionMessage(String code) {
         // Use local guidance: an untrusted response may echo a credential or terminal controls.
         return switch (code) {
+            case "INCOMPATIBLE_PROTOCOL" ->
+                    "Сервер принимает только актуальный протокол. Обновите проект из GitHub, перезагрузите Maven и запустите Main снова.";
             case "ADMIN_KEY_NOT_PASSWORD" ->
                     "Введён ключ преподавателя. Для подключения нужен общий пароль сервера; его преподаватель задаёт в админке и сообщает группе.";
             case "INVALID_SERVER_PASSWORD" ->

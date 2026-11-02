@@ -1,6 +1,7 @@
 package edu.arena.server.http;
 
 import com.sun.net.httpserver.HttpExchange;
+import edu.arena.protocol.Messages;
 import edu.arena.server.config.ServerConfig;
 import edu.arena.server.match.ApplicationFailure;
 import edu.arena.server.security.BoundedRateLimiter;
@@ -90,6 +91,30 @@ final class RequestGuard {
                 throw new ApplicationFailure(
                         403, "ORIGIN_REJECTED", "Этот источник запроса не разрешён.");
             }
+        }
+    }
+
+    /** Only the public discovery endpoint may omit the protocol declaration. */
+    void requireProtocol(HttpExchange exchange) {
+        String path = exchange.getRequestURI().getRawPath();
+        if (!path.startsWith("/api/")) {
+            return;
+        }
+        var versions = exchange.getRequestHeaders().get(Messages.VERSION_HEADER);
+        if (versions == null
+                && path.equals("/api/v2/info")
+                && exchange.getRequestMethod().equals("GET")) {
+            return;
+        }
+        if (versions == null
+                || versions.size() != 1
+                || !Messages.VERSION.equals(versions.getFirst())) {
+            throw new ApplicationFailure(
+                    409,
+                    "INCOMPATIBLE_PROTOCOL",
+                    "Требуется протокол Tank Arena "
+                            + Messages.VERSION
+                            + ". Обновите SDK из GitHub или перезагрузите страницу.");
         }
     }
 
