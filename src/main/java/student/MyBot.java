@@ -1,14 +1,13 @@
 package student;
 
-import edu.arena.core.bot.Bot;
-import edu.arena.core.bot.Observation;
+import edu.arena.core.combat.CombatBot;
+import edu.arena.core.combat.CombatObservation;
 import edu.arena.core.model.Control;
 
-/** Write your decisions here. Split the behavior into your own components when you need them. */
-public final class MyBot implements Bot {
+/** Your code starts here. The initial tank does not move, fire or enable its shield. */
+public final class MyBot implements CombatBot {
     @Override
-    public Control decide(Observation view) {
-        // TODO: implement your bot.
+    public Control decide(CombatObservation view) {
         return Control.idle(view.me().position());
     }
 }

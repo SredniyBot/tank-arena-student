@@ -1,18 +1,14 @@
 target/
+**/target/
 .idea/
 .vscode/
 *.iml
-*.token
 *.log
-.DS_Store
-Thumbs.db
-
-# Local credentials do not belong in a public project.
+*.token
 .env
 .env.*
-!.env.example
-.tank-arena/
-*password*.txt
-*password*.json
-*credentials*.json
-admin-key.txt
+**/data-*/
+**/admin-key.txt
+**/server-password*
+!/.mvn/repository/
+!/.mvn/repository/**

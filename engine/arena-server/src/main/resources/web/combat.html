@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tank Arena · Бой</title>
+    <link rel="stylesheet" href="/combat.css" />
+    <script type="module" src="/combat.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="/combat.html" class="brand">TANK ARENA</a><span>Самостоятельные участники</span
+      ><a href="/#teacher">Управление сервером</a>
+    </header>
+    <main>
+      <details open id="connection-panel">
+        <summary>Подключение</summary>
+        <form id="connect">
+          <label
+            >Доступ<select id="role">
+              <option value="player">Участник</option>
+              <option value="teacher">Преподаватель</option>
+            </select></label
+          >
+          <label class="key"
+            >Личный токен или ключ преподавателя<input
+              id="key"
+              type="password"
+              autocomplete="off"
+              required
+          /></label>
+          <label
+            >Файл личного токена<input id="key-file" type="file" accept=".token,text/plain"
+          /></label>
+          <button type="submit">Подключиться</button
+          ><button type="button" id="disconnect">Отключиться</button>
+        </form>
+        <p>
+          Программа студента показывает путь к личному токену. Общий пароль используется в
+          Java-программе при регистрации.
+        </p>
+      </details>
+      <p id="status" role="status">
+        Подключитесь к работающему серверу. Стартовый бот ожидает ваши команды.
+      </p>
+      <div class="layout">
+        <section class="battle">
+          <div class="bar">
+            <h1>Поле боя</h1>
+            <label
+              >Камера<select id="camera">
+                <option value="all">Всё поле</option>
+              </select></label
+            ><span id="clock">—</span>
+          </div>
+          <canvas
+            id="field"
+            width="1280"
+            height="1280"
+            aria-label="Танки, укрытия и расходники"
+          ></canvas>
+          <div class="legend">
+            <span class="ammo">▣ Боезапас</span><span class="repair">✚ Ремонт</span
+            ><span class="module">◆ Модуль башни</span><span>× Разрушено</span>
+          </div>
+          <p id="view-note">Стены и расстояние ограничивают личный обзор.</p>
+        </section>
+        <aside>
+          <section>
+            <h2>Танк в кадре</h2>
+            <p id="equipment">Выберите танк после подключения.</p>
+          </section>
+          <section>
+            <h2>Личный счёт</h2>
+            <p class="muted">Уничтожение +100 · гибель −100</p>
+            <ol id="ranking"></ol>
+          </section>
+          <section>
+            <h2>Расходники в обзоре</h2>
+            <ul id="supplies"></ul>
+            <p id="supplies-empty">Пока нет наблюдения.</p>
+          </section>
+          <section>
+            <h2>Последние события</h2>
+            <ul id="events"></ul>
+          </section>
+          <details>
+            <summary>Правила</summary>
+            <p>
+              Все танки могут повредить друг друга. Боезапас конечен; ящики пополняются постепенно и
+              разрушаются выстрелами.
+            </p>
+            <p>
+              Ремонт: остановитесь рядом с зелёным ящиком, прекратите поворот и огонь. Один HP за
+              три секунды; движение, стрельба или урон прерывают прогресс.
+            </p>
+            <p>
+              Модуль ускоряет башню на 35% до гибели. После смерти танк возрождается в другой
+              свободной точке.
+            </p>
+          </details>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>

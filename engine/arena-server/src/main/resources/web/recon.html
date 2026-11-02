@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#e8ece8" />
+    <title>Командный бой · Tank Arena</title>
+    <link rel="stylesheet" href="/recon.css" />
+    <script type="module" src="/recon-viewer.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#field-heading">К полю</a>
+    <header class="masthead">
+      <a class="brand" href="/" aria-label="Tank Arena — главная"
+        ><svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M7 14h8v27H7zm26 0h8v27h-8zM17 15h14v27H17zM21 4h6v22h-6z" />
+          <path d="M3 20h2v16H3zm40 0h2v16h-2z" opacity=".45" /></svg
+        ><span>Tank Arena</span></a
+      >
+      <h1 id="arena-title">Танковая арена</h1>
+      <div class="connection-state">
+        <span class="status-light" aria-hidden="true"></span
+        ><span id="connection" role="status">Нет подключения</span>
+      </div>
+      <button type="button" id="disconnect" class="quiet-button">Отключиться</button>
+    </header>
+    <main>
+      <details id="setup-panel" class="setup-panel" open>
+        <summary>Подключение к арене</summary>
+        <form id="connect-form" class="toolbar">
+          <label
+            >Доступ<select id="access">
+              <option value="teacher">Преподаватель</option>
+              <option value="player">Участник</option>
+            </select></label
+          >
+          <label class="credential"
+            >Ключ преподавателя или личный токен<input
+              id="credential"
+              type="password"
+              autocomplete="off"
+              required
+          /></label>
+          <div class="credential-file">
+            <span>Личный обзор участника</span>
+            <button type="button" id="choose-credential">Выбрать файл ключа</button>
+            <input
+              id="credential-file"
+              type="file"
+              accept=".token,text/plain"
+              aria-describedby="credential-file-help"
+              hidden
+            />
+          </div>
+          <button type="submit" class="primary-button">Подключиться</button>
+          <p id="credential-file-help" class="setup-note">
+            Путь к файлу показывает программа студента. Ключ остаётся только в этой вкладке.
+          </p>
+        </form>
+      </details>
+      <p id="notice" role="status">Подключитесь к серверу или откройте пример боя.</p>
+      <div class="score-strip">
+        <span class="score-label" id="score-label">Счёт</span>
+        <div class="scoreboard" id="scores" aria-label="Счёт команд"></div>
+        <p class="score-purpose" id="score-purpose">
+          Подключитесь, чтобы увидеть условия и счёт боя.
+        </p>
+      </div>
+      <div class="layout">
+        <section class="field" aria-label="Поле боя">
+          <div id="field-heading" class="field-heading">
+            <div>
+              <strong id="mode">Арена ожидает участников</strong><span id="tick">Шаг —</span>
+            </div>
+            <div class="camera-controls">
+              <label class="camera-label"
+                ><span>Обзор</span
+                ><select id="perspective" disabled>
+                  <option value="all">Полное поле преподавателя</option>
+                </select></label
+              >
+              <label class="camera-label"
+                ><span>Кадр</span
+                ><select id="camera-mode">
+                  <option value="auto">Автоматически</option>
+                  <option value="all">Всё поле</option>
+                </select></label
+              >
+              <button id="field-size" type="button" aria-pressed="false">Крупнее</button>
+            </div>
+          </div>
+          <div class="map-stage">
+            <canvas
+              id="field"
+              width="1280"
+              height="1280"
+              aria-label="Танки, препятствия, грузы и базы"
+              title="Нажмите на видимый танк, чтобы следить за ним"
+            ></canvas>
+            <div id="empty-state" class="empty-state">
+              <strong>Поле готово к бою</strong
+              ><span>Подключитесь к серверу или откройте пример боя.</span>
+            </div>
+          </div>
+          <div class="playback" id="playback" hidden>
+            <button id="play" type="button">Пауза</button
+            ><input
+              id="seek"
+              type="range"
+              min="0"
+              max="0"
+              value="0"
+              aria-label="Кадр повтора"
+            /><span id="replay-label"></span>
+          </div>
+          <div class="field-footer">
+            <div class="legend">
+              <span id="legend-cargo"><i class="cargo-symbol" aria-hidden="true"></i>Груз</span
+              ><span id="legend-source" title="Известное место появления груза"
+                ><i id="legend-source-icon" class="source-symbol" aria-hidden="true"></i
+                ><span id="legend-source-text">Место появления</span></span
+              ><span><i class="shield-symbol" aria-hidden="true"></i>Щит</span
+              ><span><i class="vision-symbol" aria-hidden="true"></i>Нет обзора</span>
+            </div>
+            <p id="caption">Выберите видимый танк на поле или в списке, чтобы следить за ним.</p>
+          </div>
+        </section>
+        <aside>
+          <section class="replay-section">
+            <button type="button" id="demo" class="demo-button">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="m7 4 10 6-10 6Z" /></svg
+              ><span id="demo-label">Открыть пример доставки</span>
+            </button>
+            <details class="secondary-details">
+              <summary>Загрузить запись</summary>
+              <label class="file-label"
+                >Запись JSON<input id="replay-file" type="file" accept=".json,application/json"
+              /></label>
+              <p id="experiment-note">
+                Повтор показывает реальный прогон. Вывод о стратегии зависит от условий опыта.
+              </p>
+            </details>
+          </section>
+          <section id="objective-section" class="cargo-section" aria-label="Грузы в текущем обзоре">
+            <div class="section-heading">
+              <h2 id="objectives-heading">Грузы сейчас</h2>
+            </div>
+            <p id="cargo-availability">Откройте бой, чтобы увидеть грузы.</p>
+            <div id="cargo-carriers" aria-label="Перевозчики"></div>
+            <p id="cargo-distance-help" hidden>
+              Расстояние до границы базы по прямой, без учёта стен.
+            </p>
+          </section>
+          <section class="shots-section" aria-label="Наблюдаемые снаряды">
+            <div class="section-heading"><h2>Снаряды в полёте</h2></div>
+            <p id="shots-empty">Снарядов не видно.</p>
+            <div id="shot-shooters"></div>
+            <p id="shots-unknown" hidden></p>
+          </section>
+          <section class="story-section">
+            <div class="section-heading">
+              <h2>В кадре</h2>
+              <span id="camera-indicator"></span>
+            </div>
+            <strong id="focus-name">Выберите танк или откройте пример</strong>
+            <p id="focus-facts">Камера покажет перевозчика и ближайших соперников.</p>
+            <button
+              class="overview-button"
+              id="overview-reset"
+              type="button"
+              aria-label="Показать всё поле"
+            >
+              <canvas id="overview" width="180" height="180" aria-hidden="true"></canvas>
+              <span>Всё поле</span>
+            </button>
+            <p class="overview-caption">На схеме только доступные вашему обзору танки.</p>
+          </section>
+          <section class="events-section">
+            <div class="section-heading"><h2>События</h2></div>
+            <ol id="events" aria-label="Последние события"></ol>
+            <p id="events-empty">События появятся во время боя.</p>
+          </section>
+          <section class="crew-section">
+            <div class="section-heading">
+              <h2 id="roster-heading">Участники</h2>
+              <span id="roster-count">0</span>
+            </div>
+            <p id="vision-note">Имена и состояние наблюдаемых танков.</p>
+            <div id="roster" role="list" aria-label="Наблюдаемые танки"></div>
+          </section>
+          <section id="round-section" class="crew-section" hidden>
+            <h2>Общий старт</h2>
+            <p>Участники останутся в своих командах. Счёт, позиции и история боя сбросятся.</p>
+            <button id="round-start" type="button">Начать новый бой</button>
+            <p id="round-status" role="status"></p>
+          </section>
+          <details id="team-section" class="secondary-details" hidden>
+            <summary>Состав команд</summary>
+            <form id="team-form">
+              <label>Участник<select id="team-player"></select></label
+              ><label
+                >Команда<select id="team-number">
+                  <option value="0">А</option>
+                  <option value="1">Б</option>
+                  <option value="2">В</option>
+                  <option value="3">Г</option>
+                </select></label
+              ><button type="submit">Назначить</button>
+            </form>
+            <p>
+              Назначьте команду до входа на поле. Допуск и пароль — в
+              <a href="/#teacher">панели преподавателя</a>.
+            </p>
+          </details>
+          <details class="secondary-details">
+            <summary>Правила на поле</summary>
+            <p id="cargo-rule">Во время действия щита танк не стреляет.</p>
+            <p id="vision-rule">Дальность обзора задаёт сервер. Стены закрывают обзор.</p>
+            <p id="objective-rule">
+              Условия появятся после подключения.
+            </p>
+            <p id="friendly-rule">
+              Стены перекрывают пули и обзор. Союзные снаряды тоже наносят урон. Исчезновение танка
+              из личного наблюдения не означает, что он уничтожен.
+            </p>
+          </details>
+          <p><a href="/#teacher">Допуск игроков и изменение условий боя</a></p>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>

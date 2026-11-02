@@ -5,12 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import edu.arena.core.bot.Observation;
+import edu.arena.core.bot.ControlTiming;
+import edu.arena.core.combat.CombatObservation;
+import edu.arena.core.combat.CombatState;
+import edu.arena.core.combat.Equipment;
 import edu.arena.core.engine.ArenaEngine;
 import edu.arena.core.model.ArenaMap;
 import edu.arena.core.model.Control;
 import edu.arena.core.model.GameRules;
+import edu.arena.core.model.GameState;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -39,9 +45,9 @@ class MyBotTest {
         var rules = GameRules.standard(20, 20);
         var engine = new ArenaEngine(rules, map);
         var state = engine.eliminate(engine.initialState(), Set.of(1), "FORFEIT");
-        var view = new Observation(0, state, map, rules);
+        var view = observation(state, map, rules);
 
-        assertTrue(view.opponents().isEmpty());
+        assertTrue(view.visibleTanks().isEmpty());
         assertValid(new MyBot().decide(view), view);
     }
 
@@ -59,7 +65,7 @@ class MyBotTest {
                 bot = new MyBot();
                 assertTrue(state.tanks().getFirst().health() > 0);
             }
-            var view = new Observation(0, state, map, rules);
+            var view = observation(state, map, rules);
             Control control = bot.decide(view);
             assertValid(control, view);
             var commands = new ArrayList<Control>();
@@ -73,7 +79,27 @@ class MyBotTest {
         assertEquals(200, state.tick());
     }
 
-    private static void assertValid(Control control, Observation view) {
+    private static CombatObservation observation(GameState state, ArenaMap map, GameRules rules) {
+        return new CombatObservation(
+                0,
+                1,
+                "fixture",
+                state.tanks().getFirst(),
+                state.tanks().stream().filter(t -> t.slot() != 0 && t.health() > 0).toList(),
+                state.projectiles(),
+                Equipment.fresh(),
+                List.of(),
+                Collections.nCopies(state.tanks().size(), 0L),
+                map,
+                rules,
+                new ControlTiming(state.tick(), state.tick() + 2, state.tick() + 4, 2, 0),
+                CombatState.MAX_AMMUNITION,
+                CombatState.INTERACTION_RADIUS,
+                3 * rules.tickRate(),
+                CombatState.UPGRADED_TURRET_FACTOR);
+    }
+
+    private static void assertValid(Control control, CombatObservation view) {
         assertNotNull(control, "decide must return a command");
         assertAll(
                 () ->
