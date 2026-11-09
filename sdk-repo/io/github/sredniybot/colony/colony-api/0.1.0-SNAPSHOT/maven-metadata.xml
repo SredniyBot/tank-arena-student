@@ -3,21 +3,21 @@
   <groupId>io.github.sredniybot.colony</groupId>
   <artifactId>colony-api</artifactId>
   <versioning>
-    <lastUpdated>20261109112400</lastUpdated>
+    <lastUpdated>20261109121655</lastUpdated>
     <snapshot>
-      <timestamp>20261109.112400</timestamp>
+      <timestamp>20261109.121655</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.1.0-20261109.112400-1</value>
-        <updated>20261109112400</updated>
+        <value>0.1.0-20261109.121655-1</value>
+        <updated>20261109121655</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.1.0-20261109.112400-1</value>
-        <updated>20261109112400</updated>
+        <value>0.1.0-20261109.121655-1</value>
+        <updated>20261109121655</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
