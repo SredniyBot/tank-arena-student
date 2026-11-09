@@ -1,12 +1,11 @@
 package student;
 
-import edu.arena.client.CombatApplication;
+import colony.local.Launcher;
 
-/** Run from the IDE with Java 21. Registration prompts appear in the console. */
-public final class Main {
-    private Main() {}
+/** Запуск игры. Аргументы — в README, раздел «Аргументы». */
+public class Main {
 
-    public static void main(String[] args) throws Exception {
-        CombatApplication.run(MyBot::new);
+    public static void main(String[] args) {
+        Launcher.main(args, MyColony::new);
     }
 }

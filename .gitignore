@@ -1,14 +1,20 @@
+# Сборка и IDE
 target/
-**/target/
+*.class
 .idea/
-.vscode/
 *.iml
-*.log
-*.token
-.env
-.env.*
-**/data-*/
-**/admin-key.txt
-**/server-password*
-!/.mvn/repository/
-!/.mvn/repository/**
+out/
+
+# Повторы матчей: большие, у каждого свои
+replays/
+
+# Служебные файлы лестницы и самопроверки
+*.lock
+*.tmp
+*.part
+
+# ladder-results.json не игнорируем: его коммитят, по нему преподаватель видит рост
+
+# Токен для мира на сервере (позже в курсе) — никогда не в Git
+colony-token*
+.colony/

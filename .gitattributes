@@ -1,5 +1,6 @@
 * text=auto eol=lf
-*.png binary
-*.jpg binary
-*.zip binary
+*.cmd text eol=crlf
+*.bat text eol=crlf
+mvnw text eol=lf
 *.jar binary
+sdk-repo/** binary
