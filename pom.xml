@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>student</groupId>
+    <artifactId>colony</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>Моя колония</name>
+
+    <properties>
+        <!-- Версию SDK меняет преподаватель перед парой; самопроверка скажет, если она устарела. -->
+        <colony.sdk.version>0.1.0-SNAPSHOT</colony.sdk.version>
+        <colony.sdk.repo>https://sredniybot.github.io/colony-maven/</colony.sdk.repo>
+        <!--
+            Нет интернета в классе: преподаватель раздаёт папку colony-maven (флешка, общий диск).
+            Скопируй её в C:\colony-maven, замени строку выше на
+            <colony.sdk.repo>file:///C:/colony-maven/</colony.sdk.repo>
+            и нажми Maven → Reload. Когда появится сеть, верни адрес сайта.
+        -->
+
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.11.4</junit.version>
+    </properties>
+
+    <repositories>
+        <!-- Предпросмотр: SDK лежит в папке sdk-repo этого репозитория, пока не опубликован на сайте. -->
+        <repository>
+            <id>colony-preview</id>
+            <url>file://${maven.multiModuleProjectDirectory}/sdk-repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>colony</id>
+            <url>${colony.sdk.repo}</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.sredniybot.colony</groupId>
+            <artifactId>colony-sdk</artifactId>
+            <version>${colony.sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <!-- браузер в тестах не открываем -->
+                    <systemPropertyVariables>
+                        <colony.browser>false</colony.browser>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
