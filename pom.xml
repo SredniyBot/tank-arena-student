@@ -11,7 +11,7 @@
 
     <properties>
         <!-- Версию SDK меняет преподаватель перед парой; самопроверка скажет, если она устарела. -->
-        <colony.sdk.version>0.1.0-SNAPSHOT</colony.sdk.version>
+        <colony.sdk.version>0.1.0-abilities-SNAPSHOT</colony.sdk.version>
         <colony.sdk.repo>https://sredniybot.github.io/colony-maven/</colony.sdk.repo>
         <!--
             Нет интернета в классе: преподаватель раздаёт папку colony-maven (флешка, общий диск).
@@ -79,6 +79,13 @@
                         <colony.browser>false</colony.browser>
                         <java.awt.headless>true</java.awt.headless>
                     </systemPropertyVariables>
+                    <!--
+                        Шаги ДЗ (StepsTest) красные, пока шаг не сделан, поэтому сборку не роняют: в IntelliJ они
+                        запускаются ▶, на GitHub — отдельным шагом проверки.
+                    -->
+                    <excludes>
+                        <exclude>**/StepsTest.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>

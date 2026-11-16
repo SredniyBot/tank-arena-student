@@ -4,8 +4,8 @@
   <artifactId>colony-parent</artifactId>
   <versioning>
     <versions>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0-abilities-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20261109121655</lastUpdated>
+    <lastUpdated>20261116104245</lastUpdated>
   </versioning>
 </metadata>

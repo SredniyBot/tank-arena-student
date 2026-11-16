@@ -39,6 +39,17 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           .\mvnw.cmd -B -q org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath "-Dmdep.outputFile=target/classpath.txt"
 
+      # Шаги ДЗ на учебных картах: красный шаг не роняет проверку, итог — в журнале этого шага
+      - name: Шаги ДЗ (Linux)
+        if: runner.os != 'Windows'
+        continue-on-error: true
+        run: sh ./mvnw -B surefire:test -Dtest=StepsTest
+
+      - name: Шаги ДЗ (Windows)
+        if: runner.os == 'Windows'
+        continue-on-error: true
+        run: .\mvnw.cmd -B surefire:test "-Dtest=StepsTest"
+
       - name: Самопроверка (Linux)
         if: runner.os != 'Windows'
         run: java -cp "target/classes:$(cat target/classpath.txt)" student.Main --selfcheck
