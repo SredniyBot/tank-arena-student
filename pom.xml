@@ -10,15 +10,8 @@
     <name>Моя колония</name>
 
     <properties>
-        <!-- Версию SDK меняет преподаватель перед парой; самопроверка скажет, если она устарела. -->
-        <colony.sdk.version>0.1.0-abilities-SNAPSHOT</colony.sdk.version>
-        <colony.sdk.repo>https://sredniybot.github.io/colony-maven/</colony.sdk.repo>
-        <!--
-            Нет интернета в классе: преподаватель раздаёт папку colony-maven (флешка, общий диск).
-            Скопируй её в C:\colony-maven, замени строку выше на
-            <colony.sdk.repo>file:///C:/colony-maven/</colony.sdk.repo>
-            и нажми Maven → Reload. Когда появится сеть, верни адрес сайта.
-        -->
+        <!-- Версию SDK меняет преподаватель вместе с папкой sdk-repo; самопроверка скажет, если она устарела. -->
+        <colony.sdk.version>0.2.0</colony.sdk.version>
 
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,20 +19,10 @@
     </properties>
 
     <repositories>
-        <!-- Предпросмотр: SDK лежит в папке sdk-repo этого репозитория, пока не опубликован на сайте. -->
-        <repository>
-            <id>colony-preview</id>
-            <url>file://${maven.multiModuleProjectDirectory}/sdk-repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+        <!-- SDK лежит в папке sdk-repo этого репозитория; остальные библиотеки Maven скачивает из интернета. -->
         <repository>
             <id>colony</id>
-            <url>${colony.sdk.repo}</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <url>file://${maven.multiModuleProjectDirectory}/sdk-repo</url>
         </repository>
     </repositories>
 
@@ -80,11 +63,11 @@
                         <java.awt.headless>true</java.awt.headless>
                     </systemPropertyVariables>
                     <!--
-                        Шаги ДЗ (StepsTest) красные, пока шаг не сделан, поэтому сборку не роняют: в IntelliJ они
+                        Уровни ДЗ (LevelsTest) красные, пока уровень не сделан, поэтому сборку не роняют: в IntelliJ они
                         запускаются ▶, на GitHub — отдельным шагом проверки.
                     -->
                     <excludes>
-                        <exclude>**/StepsTest.java</exclude>
+                        <exclude>**/LevelsTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
